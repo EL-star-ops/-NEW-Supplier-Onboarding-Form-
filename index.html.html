@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeliosX Group - Supplier Onboarding</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:20px}
+.container{max-width:900px;margin:0 auto;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.3);overflow:hidden}
+.header{background:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);color:#fff;padding:30px;text-align:center}
+.header h1{font-size:1.8rem;margin-bottom:8px}
+.header p{opacity:0.9;font-size:0.95rem}
+.lang-switch{position:absolute;top:20px;right:20px;display:flex;gap:8px}
+.lang-btn{background:rgba(255,255,255,0.2);border:none;color:#fff;padding:8px 16px;border-radius:20px;cursor:pointer;font-size:0.85rem;transition:all 0.3s}
+.lang-btn:hover,.lang-btn.active{background:#fff;color:#1a1a2e}
+.form-body{padding:30px}
+.section{margin-bottom:30px;border:2px solid #e8e8e8;border-radius:12px;overflow:hidden}
+.section-header{background:linear-gradient(135deg,#f8f9fa 0%,#e9ecef 100%);padding:15px 20px;border-bottom:2px solid #e8e8e8;display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1.1rem;color:#1a1a2e}
+.section-body{padding:20px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:0.85rem;font-weight:600;color:#333;margin-bottom:6px}
+.form-group label .req{color:#e74c3c}
+.form-group input,.form-group select,.form-group textarea{padding:12px 14px;border:2px solid #e1e5eb;border-radius:8px;font-size:0.95rem;transition:all 0.2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1)}
+.form-group textarea{min-height:100px;resize:vertical}
+.form-group select{cursor:pointer;background:#fff}
+.form-group .error{color:#e74c3c;font-size:0.8rem;margin-top:4px;display:none}
+.form-group.has-error input,.form-group.has-error select{border-color:#e74c3c}
+.form-group.has-error .error{display:block}
+.alert{padding:14px 18px;border-radius:8px;margin-bottom:16px;font-size:0.9rem;display:flex;align-items:center;gap:10px}
+.alert-warning{background:#fff3cd;border:1px solid #ffc107;color:#856404}
+.alert-info{background:#d1ecf1;border:1px solid #17a2b8;color:#0c5460}
+.conditional{display:none}
+.conditional.show{display:block}
+.btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:20px;padding:20px;border-top:2px solid #e8e8e8}
+.btn{padding:14px 28px;border-radius:8px;font-size:1rem;font-weight:600;cursor:pointer;transition:all 0.2s;border:none}
+.btn-primary{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 4px 12px rgba(102,126,234,0.4)}
+.btn-secondary{background:#f8f9fa;color:#333;border:2px solid #e1e5eb}
+.btn-secondary:hover{background:#e9ecef}
+.btn-draft{background:#17a2b8;color:#fff}
+.success-msg{background:#d4edda;border:1px solid #28a745;color:#155724;padding:20px;border-radius:8px;text-align:center;display:none}
+.success-msg.show{display:block}
+@media(max-width:768px){.section-body{grid-template-columns:1fr}.lang-switch{position:static;justify-content:center;margin-bottom:15px}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="header" style="position:relative">
+<div class="lang-switch">
+<button class="lang-btn active" onclick="setLang('en')">🇬🇧 EN</button>
+<button class="lang-btn" onclick="setLang('de')">🇩🇪 DE</button>
+<button class="lang-btn" onclick="setLang('nl')">🇳🇱 NL</button>
+</div>
+<h1>🏥 <span data-i18n="title">HeliosX Group - Supplier Onboarding</span></h1>
+<p data-i18n="subtitle">Complete all required fields marked with *</p>
+</div>
+
+<div class="form-body">
+<div id="successMsg" class="success-msg"><strong>✅</strong> <span data-i18n="success">Form submitted successfully! Our team will review your application.</span></div>
+
+<form id="supplierForm" onsubmit="return submitForm(event)">
+
+<!-- Section 1: Company Information -->
+<div class="section">
+<div class="section-header"><h2>📋 <span data-i18n="sec1">Section 1: Company Information</span></h2></div>
+<div class="section-body">
+<div class="form-group"><label data-i18n="companyName">Legal Company Name <span class="req">*</span></label><input type="text" id="companyName" required><div class="error" data-i18n="errReq">This field is required</div></div>
+<div class="form-group"><label data-i18n="tradingName">Trading Name (if different)</label><input type="text" id="tradingName"></div>
+<div class="form-group"><label data-i18n="regNumber">Company Registration Number <span class="req">*</span></label><input type="text" id="regNumber" required><div class="error" data-i18n="errReq">This field is required</div></div>
+<div class="form-group"><label data-i18n="vatNumber">VAT Number</label><input type="text" id="vatNumber"></div>
+<div class="form-group"><label data-i18n="companyType">Company Type <span class="req">*</span></label>
+<select id="companyType" required><option value="">-- Select --</option><option value="ltd">Limited Company (Ltd)</option><option value="plc">Public Limited Company (PLC)</option><option value="llp">Limited Liability Partnership (LLP)</option><option value="partnership">Partnership</option><option value="sole">Sole Trader</option><option value="charity">Charity</option><option value="other">Other</option></select></div>
+<div class="form-group"><label data-i18n="numEmployees">Number of Employees <span class="req">*</span></label>
+<select id="numEmployees" required><option value="">-- Select --</option><option value="1-4">1-4</option><option value="5-9">5-9</option><option value="10-49">10-49</option><option value="50-249">50-249</option><option value="250-999">250-999</option><option value="1000+">1000+</option></select></div>
+<div class="form-group"><label data-i18n="dateEst">Date Established</label><input type="date" id="dateEst"></div>
+</div>
+</div>
+
+<!-- Section 2: Contact Information -->
+<div class="section">
+<div class="section-header"><h2>📞 <span data-i18n="sec2">Section 2: Contact Information</span></h2></div>
+<div class="section-body">
+<div class="form-group"><label data-i18n="contactName">Primary Contact Name <span class="req">*</span></label><input type="text" id="contactName" required></div>
+<div class="form-group"><label data-i18n="jobTitle">Job Title <span class="req">*</span></label><input type="text" id="jobTitle" required></div>
+<div class="form-group"><label data-i18n="email">Email Address <span class="req">*</span></label><input type="email" id="email" required><div class="error" data-i18n="errEmail">Please enter a valid email</div></div>
+<div class="form-group"><label data-i18n="phone">Phone Number <span class="req">*</span></label><input type="tel" id="phone" required placeholder="+44 7xxx xxx xxx"><div class="error" data-i18n="errPhone">Please enter a valid phone number</div></div>
+<div class="form-group full"><label data-i18n="address">Registered Address <span class="req">*</span></label><input type="text" id="address" required></div>
+<div class="form-group"><label data-i18n="city">City <span class="req">*</span></label><input type="text" id="city" required></div>
+<div class="form-group"><label data-i18n="postcode">Post Code <span class="req">*</span></label><input type="text" id="postcode" required></div>
+<div class="form-group"><label data-i18n="country">Country <span class="req">*</span></label>
+<select id="country" required><option value="">-- Select --</option><option value="UK">United Kingdom</option><option value="IE">Ireland</option><option value="US">United States</option><option value="DE">Germany</option><option value="NL">Netherlands</option><option value="FR">France</option><option value="ES">Spain</option><option value="IT">Italy</option><option value="other">Other</option></select></div>
+<div class="form-group"><label data-i18n="website">Website</label><input type="url" id="website" placeholder="https://"></div>
+</div>
+</div>
+
+<!-- Section 3: Supplier Category -->
+<div class="section">
+<div class="section-header"><h2>🔧 <span data-i18n="sec3">Section 3: Supplier Category</span></h2></div>
+<div class="section-body">
+<div class="form-group full">
+<div class="alert alert-info">💡 <span data-i18n="catInfo">Select your primary category - additional questions will appear based on your selection</span></div>
+</div>
+<div class="form-group full"><label data-i18n="supplierCat">Primary Supplier Category <span class="req">*</span></label>
+<select id="supplierCat" required onchange="showConditional()"><option value="">-- Select Category --</option>
+<option value="pharma">Pharmaceutical Wholesaling & Distribution</option>
+<option value="api">Active Pharmaceutical Ingredients (APIs)</option>
+<option value="materials">Raw Materials & Excipients</option>
+<option value="packaging">Packaging Materials</option>
+<option value="manufacturing">Contract Manufacturing</option>
+<option value="logistics">Cold Chain Logistics & Storage</option>
+<option value="construction">Construction & Maintenance</option>
+<option value="it">Technology & Software</option>
+<option value="professional">Professional Services (Legal/Financial)</option>
+<option value="marketing">Marketing & Creative Services</option>
+<option value="facilities">Office & Facilities Services</option>
+<option value="other">Other Services</option></select></div>
+<div class="form-group full"><label data-i18n="serviceDesc">Service/Product Description <span class="req">*</span></label><textarea id="serviceDesc" required placeholder="Describe your products/services..."></textarea></div>
+</div>
+
+<!-- Conditional: Pharma/API/Manufacturing -->
+<div id="pharmaFields" class="conditional section-body" style="border-top:2px dashed #e8e8e8">
+<div class="form-group full"><div class="alert alert-warning">⚠️ <span data-i18n="pharmaAlert">Pharmaceutical suppliers require additional compliance documentation</span></div></div>
+<div class="form-group"><label data-i18n="mhraLicense">MHRA License Type</label>
+<select id="mhraLicense"><option value="">-- Select --</option><option value="wda">Wholesale Dealer Authorisation (WDA)</option><option value="mfg">Manufacturing Authorisation</option><option value="both">Both WDA & Manufacturing</option><option value="none">Not Applicable</option></select></div>
+<div class="form-group"><label data-i18n="gdpCert">GDP Certified</label>
+<select id="gdpCert"><option value="">-- Select --</option><option value="yes">✅ Yes - Certified</option><option value="progress">⏳ In Progress</option><option value="no">❌ No</option></select></div>
+<div class="form-group"><label data-i18n="gmpCert">GMP Certification</label>
+<select id="gmpCert"><option value="">-- Select --</option><option value="eu">EU GMP</option><option value="fda">FDA GMP</option><option value="both">EU & FDA GMP</option><option value="none">Not Applicable</option></select></div>
+<div class="form-group"><label data-i18n="coldChain">Cold Chain Capability</label>
+<select id="coldChain"><option value="">-- Select --</option><option value="full">Full 2-8°C capability</option><option value="partial">Partial capability</option><option value="none">Not Required</option></select></div>
+</div>
+
+<!-- Conditional: IT/Professional -->
+<div id="itFields" class="conditional section-body" style="border-top:2px dashed #e8e8e8">
+<div class="form-group"><label data-i18n="iso27001">ISO 27001 (Info Security)</label>
+<select id="iso27001"><option value="">-- Select --</option><option value="yes">✅ Certified</option><option value="progress">⏳ In Progress</option><option value="no">❌ No</option></select></div>
+<div class="form-group"><label data-i18n="cyberEss">Cyber Essentials</label>
+<select id="cyberEss"><option value="">-- Select --</option><option value="plus">Cyber Essentials Plus</option><option value="basic">Cyber Essentials</option><option value="no">Not Certified</option></select></div>
+<div class="form-group"><label data-i18n="gdprStatus">GDPR Compliance</label>
+<select id="gdprStatus"><option value="">-- Select --</option><option value="compliant">✅ Fully Compliant</option><option value="progress">⏳ In Progress</option><option value="na">Not Applicable</option></select></div>
+</div>
+</div>
+
+<!-- Section 4: Insurance -->
+<div class="section">
+<div class="section-header"><h2>🛡️ <span data-i18n="sec4">Section 4: Insurance & Compliance</span></h2></div>
+<div class="section-body">
+<div class="form-group"><label data-i18n="plInsurance">Public Liability Insurance <span class="req">*</span></label>
+<select id="plInsurance" required><option value="">-- Select --</option><option value="valid">✅ Valid - Current</option><option value="expired">⚠️ Expired</option><option value="na">Not Required</option></select></div>
+<div class="form-group"><label data-i18n="plExpiry">PL Expiry Date</label><input type="date" id="plExpiry"></div>
+<div class="form-group"><label data-i18n="plAmount">PL Coverage Amount</label>
+<select id="plAmount"><option value="">-- Select --</option><option value="1m">£1 Million</option><option value="2m">£2 Million</option><option value="5m">£5 Million</option><option value="10m">£10 Million+</option></select></div>
+<div class="form-group"><label data-i18n="piInsurance">Professional Indemnity</label>
+<select id="piInsurance"><option value="">-- Select --</option><option value="valid">✅ Valid</option><option value="expired">⚠️ Expired</option><option value="na">Not Required</option></select></div>
+<div class="form-group"><label data-i18n="elInsurance">Employers Liability</label>
+<select id="elInsurance"><option value="">-- Select --</option><option value="valid">✅ Valid</option><option value="expired">⚠️ Expired</option><option value="na">N/A - No Employees</option></select></div>
+<div class="form-group"><label data-i18n="isoCerts">ISO Certifications</label>
+<select id="isoCerts"><option value="">-- Select --</option><option value="9001">ISO 9001 (Quality)</option><option value="14001">ISO 14001 (Environmental)</option><option value="45001">ISO 45001 (H&S)</option><option value="multiple">Multiple Certifications</option><option value="none">None</option></select></div>
+</div>
+</div>
+
+<!-- Section 5: Financial -->
+<div class="section">
+<div class="section-header"><h2>💳 <span data-i18n="sec5">Section 5: Financial Information</span></h2></div>
+<div class="section-body">
+<div class="form-group"><label data-i18n="payTerms">Payment Terms <span class="req">*</span></label>
+<select id="payTerms" required><option value="">-- Select --</option><option value="immediate">Immediate</option><option value="7">7 Days</option><option value="14">14 Days</option><option value="30">30 Days</option><option value="45">45 Days</option><option value="60">60 Days</option><option value="eom">End of Month</option></select></div>
+<div class="form-group"><label data-i18n="currency">Currency <span class="req">*</span></label>
+<select id="currency" required><option value="">-- Select --</option><option value="GBP">GBP - British Pound</option><option value="EUR">EUR - Euro</option><option value="USD">USD - US Dollar</option><option value="other">Other</option></select></div>
+<div class="form-group"><label data-i18n="bankName">Bank Name <span class="req">*</span></label><input type="text" id="bankName" required></div>
+<div class="form-group"><label data-i18n="accName">Account Name <span class="req">*</span></label><input type="text" id="accName" required></div>
+<div class="form-group"><label data-i18n="sortCode">Sort Code <span class="req">*</span></label><input type="text" id="sortCode" required placeholder="00-00-00" maxlength="8"><div class="error" data-i18n="errSort">Enter valid sort code (00-00-00)</div></div>
+<div class="form-group"><label data-i18n="accNumber">Account Number <span class="req">*</span></label><input type="text" id="accNumber" required placeholder="12345678" maxlength="8"><div class="error" data-i18n="errAcc">Enter valid 8-digit account number</div></div>
+<div class="form-group"><label data-i18n="iban">IBAN (if applicable)</label><input type="text" id="iban"></div>
+<div class="form-group"><label data-i18n="swift">SWIFT/BIC Code</label><input type="text" id="swift"></div>
+</div>
+</div>
+
+<!-- Section 6: Internal -->
+<div class="section">
+<div class="section-header"><h2>🏢 <span data-i18n="sec6">Section 6: Internal Use Only</span></h2></div>
+<div class="section-body">
+<div class="form-group"><label data-i18n="department">Department <span class="req">*</span></label>
+<select id="department" required><option value="">-- Select --</option><option value="operations">Operations</option><option value="finance">Finance</option><option value="it">IT</option><option value="procurement">Procurement</option><option value="facilities">Facilities</option><option value="production">Production</option><option value="other">Other</option></select></div>
+<div class="form-group"><label data-i18n="location">Site/Location <span class="req">*</span></label>
+<select id="location" required><option value="">-- Select --</option><option value="uk-hq">UK Head Office</option><option value="us">US Operations</option><option value="all">All Locations</option><option value="other">Other</option></select></div>
+<div class="form-group"><label data-i18n="requestedBy">Requested By <span class="req">*</span></label><input type="text" id="requestedBy" required></div>
+<div class="form-group"><label data-i18n="requestDate">Request Date <span class="req">*</span></label><input type="date" id="requestDate" required></div>
+<div class="form-group full"><label data-i18n="notes">Internal Notes</label><textarea id="notes" placeholder="Any additional notes..."></textarea></div>
+</div>
+</div>
+
+<div class="btn-row">
+<button type="button" class="btn btn-secondary" onclick="clearForm()" data-i18n="btnClear">Clear Form</button>
+<button type="button" class="btn btn-draft" onclick="saveDraft()" data-i18n="btnDraft">Save Draft</button>
+<button type="submit" class="btn btn-primary" data-i18n="btnSubmit">Submit Application</button>
+</div>
+</form>
+</div>
+</div>
+
+<script>
+const i18n={
+en:{title:"HeliosX Group - Supplier Onboarding",subtitle:"Complete all required fields marked with * | CHAS compliance mandatory for new suppliers",sec1:"Section 1: Company Information",sec2:"Section 2: Contact Information",sec3:"Section 3: Supplier Category",sec4:"Section 4: Insurance & Compliance",sec5:"Section 5: Financial Information",sec6:"Section 6: Internal Use Only",companyName:"Legal Company Name",tradingName:"Trading Name (if different)",regNumber:"Company Registration Number",vatNumber:"VAT Number",companyType:"Company Type",numEmployees:"Number of Employees",dateEst:"Date Established",contactName:"Primary Contact Name",jobTitle:"Job Title",email:"Email Address",phone:"Phone Number",address:"Registered Address",city:"City",postcode:"Post Code",country:"Country",website:"Website",supplierCat:"Primary Supplier Category",serviceDesc:"Service/Product Description",catInfo:"Select your primary category - additional questions will appear based on your selection",pharmaAlert:"Pharmaceutical suppliers require additional compliance documentation",chasAlert:"CHAS registration is MANDATORY for construction/maintenance suppliers",mhraLicense:"MHRA License Type",gdpCert:"GDP Certified",gmpCert:"GMP Certification",coldChain:"Cold Chain Capability",chasStatus:"CHAS Status",chasCert:"CHAS Certificate Number",chasExpiry:"CHAS Expiry Date",safetyPolicy:"H&S Policy Status",iso27001:"ISO 27001 (Info Security)",cyberEss:"Cyber Essentials",gdprStatus:"GDPR Compliance",plInsurance:"Public Liability Insurance",plExpiry:"PL Expiry Date",plAmount:"PL Coverage Amount",piInsurance:"Professional Indemnity",elInsurance:"Employers Liability",isoCerts:"ISO Certifications",payTerms:"Payment Terms",currency:"Currency",bankName:"Bank Name",accName:"Account Name",sortCode:"Sort Code",accNumber:"Account Number",iban:"IBAN (if applicable)",swift:"SWIFT/BIC Code",department:"Department",location:"Site/Location",requestedBy:"Requested By",requestDate:"Request Date",notes:"Internal Notes",btnClear:"Clear Form",btnDraft:"Save Draft",btnSubmit:"Submit Application",success:"Form submitted successfully! Our team will review your application.",errReq:"This field is required",errEmail:"Please enter a valid email",errPhone:"Please enter a valid phone number",errSort:"Enter valid sort code (00-00-00)",errAcc:"Enter valid 8-digit account number"},
+de:{title:"HeliosX Group - Lieferanten-Registrierung",subtitle:"Füllen Sie alle Pflichtfelder (*) aus | CHAS-Compliance für neue Lieferanten obligatorisch",sec1:"Abschnitt 1: Firmeninformationen",sec2:"Abschnitt 2: Kontaktinformationen",sec3:"Abschnitt 3: Lieferantenkategorie",sec4:"Abschnitt 4: Versicherung & Compliance",sec5:"Abschnitt 5: Finanzinformationen",sec6:"Abschnitt 6: Nur für interne Verwendung",companyName:"Offizieller Firmenname",tradingName:"Handelsname (falls abweichend)",regNumber:"Handelsregisternummer",vatNumber:"USt-IdNr.",companyType:"Unternehmensform",numEmployees:"Anzahl Mitarbeiter",dateEst:"Gründungsdatum",contactName:"Hauptansprechpartner",jobTitle:"Position",email:"E-Mail-Adresse",phone:"Telefonnummer",address:"Firmenadresse",city:"Stadt",postcode:"Postleitzahl",country:"Land",website:"Website",supplierCat:"Primäre Lieferantenkategorie",serviceDesc:"Produkt-/Dienstleistungsbeschreibung",catInfo:"Wählen Sie Ihre Kategorie - weitere Fragen erscheinen basierend auf Ihrer Auswahl",pharmaAlert:"Pharmazeutische Lieferanten benötigen zusätzliche Compliance-Dokumentation",chasAlert:"CHAS-Registrierung ist PFLICHT für Bau-/Wartungslieferanten",mhraLicense:"MHRA-Lizenztyp",gdpCert:"GDP-Zertifiziert",gmpCert:"GMP-Zertifizierung",coldChain:"Kühlketten-Fähigkeit",chasStatus:"CHAS-Status",chasCert:"CHAS-Zertifikatsnummer",chasExpiry:"CHAS-Ablaufdatum",safetyPolicy:"Arbeitsschutz-Status",iso27001:"ISO 27001 (Informationssicherheit)",cyberEss:"Cyber Essentials",gdprStatus:"DSGVO-Konformität",plInsurance:"Betriebshaftpflicht",plExpiry:"Ablaufdatum",plAmount:"Deckungssumme",piInsurance:"Berufshaftpflicht",elInsurance:"Arbeitgeberhaftpflicht",isoCerts:"ISO-Zertifizierungen",payTerms:"Zahlungsbedingungen",currency:"Währung",bankName:"Bankname",accName:"Kontoinhaber",sortCode:"Bankleitzahl",accNumber:"Kontonummer",iban:"IBAN",swift:"SWIFT/BIC",department:"Abteilung",location:"Standort",requestedBy:"Angefordert von",requestDate:"Anfragedatum",notes:"Interne Notizen",btnClear:"Formular löschen",btnDraft:"Entwurf speichern",btnSubmit:"Antrag einreichen",success:"Formular erfolgreich eingereicht! Unser Team wird Ihren Antrag prüfen.",errReq:"Dieses Feld ist erforderlich",errEmail:"Bitte geben Sie eine gültige E-Mail ein",errPhone:"Bitte geben Sie eine gültige Telefonnummer ein",errSort:"Gültige Bankleitzahl eingeben",errAcc:"Gültige 8-stellige Kontonummer eingeben"},
+nl:{title:"HeliosX Group - Leveranciers Registratie",subtitle:"Vul alle verplichte velden (*) in | CHAS-compliance verplicht voor nieuwe leveranciers",sec1:"Sectie 1: Bedrijfsinformatie",sec2:"Sectie 2: Contactgegevens",sec3:"Sectie 3: Leverancierscategorie",sec4:"Sectie 4: Verzekering & Compliance",sec5:"Sectie 5: Financiële Informatie",sec6:"Sectie 6: Alleen voor intern gebruik",companyName:"Officiële bedrijfsnaam",tradingName:"Handelsnaam (indien afwijkend)",regNumber:"KVK-nummer",vatNumber:"BTW-nummer",companyType:"Bedrijfsvorm",numEmployees:"Aantal werknemers",dateEst:"Oprichtingsdatum",contactName:"Hoofdcontactpersoon",jobTitle:"Functie",email:"E-mailadres",phone:"Telefoonnummer",address:"Bedrijfsadres",city:"Plaats",postcode:"Postcode",country:"Land",website:"Website",supplierCat:"Primaire leverancierscategorie",serviceDesc:"Product-/dienstbeschrijving",catInfo:"Selecteer uw categorie - aanvullende vragen verschijnen op basis van uw selectie",pharmaAlert:"Farmaceutische leveranciers vereisen aanvullende compliance-documentatie",chasAlert:"CHAS-registratie is VERPLICHT voor bouw-/onderhoudsleveranciers",mhraLicense:"MHRA-licentietype",gdpCert:"GDP-gecertificeerd",gmpCert:"GMP-certificering",coldChain:"Koelketen-capaciteit",chasStatus:"CHAS-status",chasCert:"CHAS-certificaatnummer",chasExpiry:"CHAS-vervaldatum",safetyPolicy:"Arbo-beleidstatus",iso27001:"ISO 27001 (Informatiebeveiliging)",cyberEss:"Cyber Essentials",gdprStatus:"AVG-compliance",plInsurance:"Aansprakelijkheidsverzekering",plExpiry:"Vervaldatum",plAmount:"Dekkingsbedrag",piInsurance:"Beroepsaansprakelijkheid",elInsurance:"Werkgeversaansprakelijkheid",isoCerts:"ISO-certificeringen",payTerms:"Betalingsvoorwaarden",currency:"Valuta",bankName:"Banknaam",accName:"Rekeninghouder",sortCode:"Bankcode",accNumber:"Rekeningnummer",iban:"IBAN",swift:"SWIFT/BIC",department:"Afdeling",location:"Locatie",requestedBy:"Aangevraagd door",requestDate:"Aanvraagdatum",notes:"Interne notities",btnClear:"Formulier wissen",btnDraft:"Concept opslaan",btnSubmit:"Aanvraag indienen",success:"Formulier succesvol ingediend! Ons team zal uw aanvraag beoordelen.",errReq:"Dit veld is verplicht",errEmail:"Voer een geldig e-mailadres in",errPhone:"Voer een geldig telefoonnummer in",errSort:"Voer geldige bankcode in",errAcc:"Voer geldig 8-cijferig rekeningnummer in"}
+};
+let currentLang='en';
+
+function setLang(lang){
+currentLang=lang;
+document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+event.target.classList.add('active');
+document.querySelectorAll('[data-i18n]').forEach(el=>{
+const key=el.getAttribute('data-i18n');
+if(i18n[lang][key]){
+if(el.tagName==='LABEL'){
+const req=el.querySelector('.req');
+el.innerHTML=i18n[lang][key]+(req?' <span class="req">*</span>':'');
+}else{el.textContent=i18n[lang][key];}
+}
+});
+}
+
+function showConditional(){
+const cat=document.getElementById('supplierCat').value;
+document.querySelectorAll('.conditional').forEach(el=>el.classList.remove('show'));
+if(['pharma','api','materials','packaging','manufacturing','logistics'].includes(cat)){
+document.getElementById('pharmaFields').classList.add('show');
+}
+if(cat==='construction'||cat==='facilities'){
+document.getElementById('itFields').classList.add('show');
+}
+if(cat==='it'||cat==='professional'){
+document.getElementById('itFields').classList.add('show');
+}
+}
+
+function validateEmail(e){return/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+function validatePhone(p){return/^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,4}[-\s\.]?[0-9]{1,9}$/.test(p.replace(/\s/g,''));}
+function validateSort(s){return/^[0-9]{2}[-]?[0-9]{2}[-]?[0-9]{2}$/.test(s);}
+function validateAcc(a){return/^[0-9]{8}$/.test(a);}
+
+function submitForm(e){
+e.preventDefault();
+let valid=true;
+document.querySelectorAll('.has-error').forEach(el=>el.classList.remove('has-error'));
+
+const email=document.getElementById('email');
+if(!validateEmail(email.value)){email.parentElement.classList.add('has-error');valid=false;}
+
+const phone=document.getElementById('phone');
+if(!validatePhone(phone.value)){phone.parentElement.classList.add('has-error');valid=false;}
+
+const sort=document.getElementById('sortCode');
+if(!validateSort(sort.value)){sort.parentElement.classList.add('has-error');valid=false;}
+
+const acc=document.getElementById('accNumber');
+if(!validateAcc(acc.value)){acc.parentElement.classList.add('has-error');valid=false;}
+
+if(valid){
+document.getElementById('successMsg').classList.add('show');
+document.getElementById('supplierForm').style.display='none';
+window.scrollTo({top:0,behavior:'smooth'});
+}
+return false;
+}
+
+function clearForm(){
+if(confirm('Clear all form data?')){
+document.getElementById('supplierForm').reset();
+document.querySelectorAll('.conditional').forEach(el=>el.classList.remove('show'));
+document.querySelectorAll('.has-error').forEach(el=>el.classList.remove('has-error'));
+}
+}
+
+function saveDraft(){
+const data={};
+document.querySelectorAll('input,select,textarea').forEach(el=>{if(el.id)data[el.id]=el.value;});
+console.log('Draft saved:',data);
+alert('Draft saved! (In production, this would save to your system)');
+}
+
+document.getElementById('requestDate').valueAsDate=new Date();
+</script>
+</body>
+</html>
